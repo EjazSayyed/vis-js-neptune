@@ -42,22 +42,33 @@ Once the proxy is exposed, we can access the APIs from Javascript code being exe
 
 ## Steps
 1. [Provision Amazon Neptune Cluster](#1-provision-amazon-neptune-cluster)
-2. Load sample data into Amazon Neptune
-3. Create and Configure AWS Lambda Function
-4. Create and Configure Amazon API Gateway - Proxy API
+2. [Load sample data into Amazon Neptune](#2-load-sample-data-into-amazon-neptune)
+3. [Create and Configure AWS Lambda Function](#3-create-and-configure-aws-lambda-function)
+4. [Create and Configure Amazon API Gateway - Proxy API](#4-create-and-configure-amazon-api-gateway---proxy-api)
 5. Configure Amazon S3 bucket for hosting a static website
 
 
 
 ### 1. Provision Amazon Neptune Cluster
 Follow the procedure mentioned in [Amazon Neptune Documentation](https://docs.aws.amazon.com/neptune/latest/userguide/get-started-prerequisites.html) to provision a new Amazon Neptune Instance inside a VPC.<BR/>
-Once done, create a "bastion host" inside the same VPC to load data from Amazon S3 into Amazon Neptune.
 
 ### 2. Load sample data into Amazon Neptune
 This GitHub repo provides you [sample twitter data](sampledata/) that you can load into Amazon Neptune.
 To load the data into Amazon Neptune, you will need to <br>
--  copy the sample data to Amazon S3
+- copy the sample data to Amazon S3
 - create IAM Role for accessing S3 bucket and attach it to Amazon Neptune cluster
+- create Amazon S3 VPC Endpoint and attach it to the VPC 
+- create a "bastion host" inside the same VPC to load data from Amazon S3 into Amazon Neptune.<br/>
+
 For details on how to load data from Amazon S3 to Amazon Neptune please refer [this](https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html) link from AWS documentation.
 
+### 3. Create and configure AWS Lambda function
+Once you load data into Amazon Neptune, you need to create the AWS Lambda function to access this data and expose it over RESTful interface through Amazon API Gateway.
+To do this execute the below command from AWS CLI, to create a Lambda function-
+```
+command...
+```
 
+We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
+
+### 4. Create and Configure Amazon API Gateway - Proxy API
