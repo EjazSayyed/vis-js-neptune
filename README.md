@@ -72,9 +72,12 @@ sudo yum install npm
 
 git clone https://github.com/EjazSayyed/vis-js-neptune.git
 
+cd vis-js-neptune
+
 npm install
 
 zip lambdapackage.zip -r node_modules/ indexLambda.js
+
 
 ```
 
