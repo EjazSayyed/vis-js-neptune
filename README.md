@@ -41,7 +41,7 @@ Once the proxy is exposed, we can access the APIs from Javascript code being exe
 ![](images/architecture.png)
 
 ## Steps
-1. Provision Amazon Neptune Cluster and configure it for access to S3
+1. [Provision Amazon Neptune Cluster and configure it for access to S3](#1-Provision Amazon Neptune Cluster and configure it for access to S3)
 2. Load data into Amazon Neptune
 3. Create and Configure AWS Lambda Function
 4. Create and Configure Amazon API Gateway - Proxy API
@@ -49,5 +49,5 @@ Once the proxy is exposed, we can access the APIs from Javascript code being exe
 
 
 
-
+1. Provision Amazon Neptune Cluster and configure it for access to S3
 
