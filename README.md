@@ -18,7 +18,8 @@ There are also open source libraries and solutions available. Few of them are -
 3. VIS.js open source library by VISJS.org etc.
 Customers can use these visualization libraries to build their own applications and products on top of Amazon Neptune.
 
-In the rest of the lab, we will focus on visualizing  data in Amazon Neptune using VIS.js.
+In the rest of the lab, we will focus on visualizing  data in Amazon Neptune using [VIS.js](http://visjs.org).
+VIS.js is a Javascript library used for visualizing graph data. It has various components such as DataSet, Timeline, Graph2D, Graph3D, Network etc. for displaying data in various ways.
 
 ## PREREQUISITES:
 
