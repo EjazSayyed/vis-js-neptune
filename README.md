@@ -64,11 +64,29 @@ For details on how to load data from Amazon S3 to Amazon Neptune please refer [t
 
 ### 3. Create and configure AWS Lambda function
 Once you load data into Amazon Neptune, you need to create the AWS Lambda function to access this data and expose it over RESTful interface through Amazon API Gateway.
-To do this execute the below command from AWS CLI, to create a Lambda function-
+Execute below steps to create the deployment package and create AWS Lambda function - 
 ```
-command...
+sudo yum install git 
+
+sudo yum install npm
+
+git clone https://github.com/EjazSayyed/vis-js-neptune.git
+
+npm install
+
+zip lambdapackage.zip -r node_modules/ indexLambda.js
+
 ```
 
+Once AWS Lambda deployment package is ready, we will not create the Lambda function using [AWS CLI](https://aws.amazon.com/cli/).<br/>
+To install and configure AWS CLI on your operating system, please refer to - https://docs.aws.amazon.com/cli/latest/userguide/installing.html
+
+Run below command to create AWS Lambda function within the same VPC as Amazon Neptune cluster.
+
+```
+
+```
 We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
 
 ### 4. Create and Configure Amazon API Gateway - Proxy API
+
