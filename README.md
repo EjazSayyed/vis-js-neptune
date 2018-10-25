@@ -37,7 +37,7 @@ Below is the architecture that we will be using to visualize data in Amazon Nept
 Since Amazon Neptune instance can't be accessed outside the VPC, we are using AWS Lambda function in VPC. This AWS Lambda function is accessed through the proxy created and exposed to internet using Amazon API Gateway.
 Once the proxy is exposed, we can access the APIs from Javascript code being executed from Amazon S3 (statis website).
 
-
+![](images/architecture.png)
 
 ## Steps
 
