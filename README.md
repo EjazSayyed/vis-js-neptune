@@ -4,7 +4,7 @@ This GitHub lab will take you through hands-on excercise of visualizing graph da
 Amazon Neptune is a fast, reliable, fully-managed graph database service available from AWS.
 With Amazon Neptune you can use open and popular graph query languages such as Apache TinkerPop Gremlin for property graph databases or SPARQL for W3C RDF model graph databases.
 
-##Primer
+## Primer
 Currently, Amazon Neptune does not provide visualization service from the AWS console.
 Customers can leverage our partner solutions mentioned below to perform visualization of data in Amazon Neptune.
 Some of our partners in this area are - 
@@ -20,7 +20,7 @@ Customers can use these visualization libraries to build their own applications 
 
 In the rest of the lab, we will focus on visualizing  data in Amazon Neptune using VIS.js.
 
-##PREREQUISITES:
+## PREREQUISITES:
 
 1. Amazon Neptune Cluster
 2. Access to AWS IAM for
