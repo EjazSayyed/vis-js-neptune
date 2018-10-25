@@ -1,4 +1,4 @@
-# Visualize data in Amazon Neptune using vis.js library
+# Visualize data in Amazon Neptune using VIS.js library
 
 This GitHub lab will take you through hands-on excercise of visualizing graph data in Amazon Neptune using VIS.js library.
 Amazon Neptune is a fast, reliable, fully-managed graph database service available from AWS.
@@ -10,8 +10,8 @@ Customers can leverage our partner solutions mentioned below to perform visualiz
 Some of our partners in this area are - 
 1. Tom Sawyer Perspectives by TomSawyer Softwares
 2. Keylines by Cambridge Intelligence
-3. Metaphactory by Metaphacts etc.
-Customers can leverage above commercial solutions to visualize data in Amazon Neptune.
+3. Metaphactory by Metaphacts etc. <BR/>
+Customers can leverage above commercial solutions to visualize data in Amazon Neptune. <BR/>
 There are also open source libraries and solutions available. Few of them are -
 1. GraphExp open source visualization tool by 
 2. D3.js javascript library by D3JS.org 
