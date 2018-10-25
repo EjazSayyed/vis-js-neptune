@@ -49,5 +49,5 @@ Once the proxy is exposed, we can access the APIs from Javascript code being exe
 
 
 
-1. Provision Amazon Neptune Cluster and configure it for access to S3
+### 1. Provision Amazon Neptune Cluster and configure it for access to S3
 
