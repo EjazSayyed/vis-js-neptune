@@ -126,4 +126,14 @@ First we create the Restful API using the below command from AWS CLI.
 aws apigateway create-rest-api --name lambda-neptune-proxy-api --description "API Proxy for AWS Lambda function in VPC accessing Amazon Neptune" 
 ```
 
-Note the value of "Id" field from the earlier output and use it as a <rest-api-id> value below.
+Note the value of "id" field from the earlier output and use it as a <rest-api-id> value below.
+
+```
+aws apigateway get-resources --rest-api-id <rest-api-id>
+```
+
+Note the value of "id" field from the earlier output and use it as a <parent-id> value below.
+```
+aws apigateway create-resource --rest-api-id <rest-api-id>  --parent-id <parent-id> --path-part {proxy+}
+```
+  
