@@ -8,7 +8,7 @@ exports.handler = function(event, context, callback) {
 
     var DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
     var Graph = gremlin.structure.Graph;
-    dc = new DriverRemoteConnection('ws://neptune360.cluajh6rcbti.us-east-1.neptune.amazonaws.com:8182/gremlin');
+    dc = new DriverRemoteConnection('ws://nep1.crhihlsciw0e.us-east-2.neptune.amazonaws.com:8182/gremlin');
     var graph = new Graph();
     var g = graph.traversal().withRemote(dc);
 
@@ -21,8 +21,8 @@ exports.handler = function(event, context, callback) {
         "Content-Type": "application/json"
     };
 
-    console.log(event.pathParameters);
-    console.log(event.pathParameters.proxy);
+    console.log("Path Parameters => "+ event.pathParameters);
+    console.log("event.pathParameters.proxy => "+ event.pathParameters.proxy);
     console.log(event.pathParameters.proxy.match(/proxy/ig));
 
     // this code is only for populating the search LoV
@@ -74,28 +74,6 @@ exports.handler = function(event, context, callback) {
     });
     }
 
-    /*
-    if (event.pathParameters.proxy.match(/proxy/ig)) { //check the URL of the current request
-        // res.writeHead(200,{'Access-Control-Allow-Origin': '*'});
-        myNodes(g, function (err, data) {
-            console.log(JSON.stringify(data));
-            //res.write(JSON.stringify(data));
-            var response = {
-                statusCode: 200,
-                headers: headers,
-                body: JSON.stringify(data)
-            };
-
-            console.log("response: " + JSON.stringify(response));
-
-            callback(null, response);
-            context.done();
-            dc.close();
-            console.log('response returned');
-           // res.end();
-        });
-    }
-*/
 
     if (event.pathParameters.proxy.match(/neighbours/ig)) {
         g.V().has('User','~id',event.queryStringParameters.id).in_('Follows').valueMap(true).limit(10).toList().then(
