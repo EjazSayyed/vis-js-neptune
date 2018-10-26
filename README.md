@@ -63,8 +63,8 @@ To load the data into Amazon Neptune, you will need to <br>
 For details on how to load data from Amazon S3 to Amazon Neptune please refer [this](https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html) link from AWS documentation.
 
 ### 3. Create and configure AWS Lambda function
-Once you load data into Amazon Neptune, you need to create the AWS Lambda function to access this data and expose it over RESTful interface through Amazon API Gateway.
-Execute below steps to create the deployment package and create AWS Lambda function - 
+Once you load data into Amazon Neptune, you need to create the AWS Lambda function to access this data and expose it over RESTful interface through Amazon API Gateway.<br/>
+Execute below steps from the terminal to create the deployment package and create AWS Lambda function - 
 ```
 sudo yum install git 
 
@@ -78,18 +78,89 @@ npm install
 
 zip lambdapackage.zip -r node_modules/ indexLambda.js
 
-
 ```
 
-Once AWS Lambda deployment package is ready, we will not create the Lambda function using [AWS CLI](https://aws.amazon.com/cli/).<br/>
-To install and configure AWS CLI on your operating system, please refer to - https://docs.aws.amazon.com/cli/latest/userguide/installing.html
+Once AWS Lambda deployment package (.zip file) is ready, we can create the Lambda function using [AWS CLI](https://aws.amazon.com/cli/).<br/>
+To install and configure AWS CLI on your operating system, please refer to - https://docs.aws.amazon.com/cli/latest/userguide/installing.html <br/>
+After installing AWS CLI, run `aws configure` to set the access_key, secret_key and AWS region.
 
-Run below command to create AWS Lambda function within the same VPC as Amazon Neptune cluster.
+Run below commands to create AWS Lambda function within the same VPC as Amazon Neptune cluster.
 
+AWS Lambda function would need an execution role to be able to create ENIs in the VPC for accessing the Neptune instance.
+```
+aws iam create-role --path /service-role/ --role-name lambda-vpc-access-role --assume-role-policy-document '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}' --description "VPC Access role for lambda function"
 ```
 
+Below is the command to attach the policy provided by AWS to the above role.
+
 ```
+aws iam attach-role-policy --role-name lambda-vpc-access-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess
+```
+
+We will now create the AWS Lambda function using the deployment package and IAM role created in previous steps.
+
+```
+aws lambda create-function --function-name <lambda-function-name> --role "arn:aws:iam::<aws-account-number>:role/service-role/lambda-vpc-access-role" --runtime nodejs8.10 --handler indexLambda.handler --description "Lambda function to make gremlin calls to Amazon Neptune" --timeout 120 --memory-size 256 --publish --vpc-config SubnetIds=<subnet-ids>,SecurityGroupIds=<sec-group-id> --zip-file fileb://lambdapackage.zip
+```
+
 We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
 
 ### 4. Create and Configure Amazon API Gateway - Proxy API
 
+We would expose the AWS Lambda function created in the earlier step through Amazon API Gateway Proxy API.
+For more details on this approach please refer to AWS documentation @https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html <br/>
+
+First we create the Restful API using the below command from AWS CLI.
+```
+aws apigateway create-rest-api --name lambda-neptune-proxy-api --description "API Proxy for AWS Lambda function in VPC accessing Amazon Neptune" 
+```
+
+Note the value of "id" field from the earlier output and use it as a `<rest-api-id>` value below.
+
+```
+aws apigateway get-resources --rest-api-id <rest-api-id>
+```
+
+Note the value of "id" field from the earlier output and use it as a `<parent-id>` value below.
+Below command would create a resource under the root strutrure of the API.
+```
+aws apigateway create-resource --rest-api-id <rest-api-id>  --parent-id <parent-id> --path-part {proxy+}
+```
+
+Note the value of "id" field from the output and use it as a `<resource-id>` in the command below.
+```
+aws apigateway put-method --rest-api-id <rest-api-id>  --resource-id <resource-id> --http-method ANY --authorization-type NONE
+```
+
+So far we created, an API, API Resource and Methods for that Resource (GET/PUT/POST/DELETE or ANY for all methods).
+We will now create the API method integration, that would identify the AWS Lambda function for which this resource will be acting as a PROXY.
+
+Use appropriate values obtained from the previous commands.
+```
+aws apigateway put-integration --rest-api-id <rest-api-id> --resource-id  <resource-id> --http-method ANY --type AWS_PROXY --integration-http-method POST  --uri arn:aws:apigateway:<aws-region-code>:lambda:path/2015-03-31/functions/arn:aws:lambda:<aws-region-code>:<aws-account-number>:function:<lambda-function-name>/invocations 
+```
+
+Finally we deploy the API using below command.
+```
+aws apigateway create-deployment --rest-api-id <rest-api-id> --stage-name test
+```
+
+In order for Amazon API Gateway API, to invoke AWS Lambda function we either need to provide the "execution-role" to API Integration or we can also add the permission (subscription) in AWS Lambda explicitly that says an API "X" can invoke a lambda function. This API Gateway subscription is also reflected in AWS Console.
+
+Execute below command to add API Gateway subscription/permission to AWS Lambda function.
+```
+aws lambda add-permission --function-name <lamnda-function-name> --statement-id <any-unique-id> --action lambda:* --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:<aws-region-code>:<aws-account-number>:<rest-api-id>/*/*/*
+```
+
+We have now created an API Gateway proxy for the AWS Lambda function.
