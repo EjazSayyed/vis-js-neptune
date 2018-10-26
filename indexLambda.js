@@ -31,7 +31,7 @@ exports.handler = function(event, context, callback) {
 
         g.V().hasLabel('User').limit(1000).valueMap(true).toList().then(
             data => {
-            console.log(JSON.stringify(data));
+            console.log("Response from Neptune for initialize .."+JSON.stringify(data));
         var nodes=[];
         for(var i = 0;    i < data.length;    i++)
         {
