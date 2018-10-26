@@ -78,17 +78,36 @@ npm install
 
 zip lambdapackage.zip -r node_modules/ indexLambda.js
 
-
 ```
 
-Once AWS Lambda deployment package is ready, we will not create the Lambda function using [AWS CLI](https://aws.amazon.com/cli/).<br/>
+Once AWS Lambda deployment package is ready, we will now create the Lambda function using [AWS CLI](https://aws.amazon.com/cli/).<br/>
 To install and configure AWS CLI on your operating system, please refer to - https://docs.aws.amazon.com/cli/latest/userguide/installing.html
 
-Run below command to create AWS Lambda function within the same VPC as Amazon Neptune cluster.
+Run below commands to create AWS Lambda function within the same VPC as Amazon Neptune cluster.
 
+AWS Lambda function would need an execution role to be able to create ENIs in the VPC for accessing the Neptune instance.
+```
+aws iam create-role --path /service-role/ --role-name `lambda-vpc-access-role` --assume-role-policy-document '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}' --description "VPC Access role for lambda function"
 ```
 
+Below is the command to attach the policy provided by AWS to the above role.
+
 ```
+aws iam attach-role-policy --role-name lambda-vpc-access-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess
+```
+
+
 We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
 
 ### 4. Create and Configure Amazon API Gateway - Proxy API
