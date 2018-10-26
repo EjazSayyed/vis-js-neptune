@@ -111,7 +111,7 @@ aws iam attach-role-policy --role-name lambda-vpc-access-role --policy-arn arn:a
 We will now create the AWS Lambda function using the deployment package and IAM role created in previous steps.
 
 ```
-aws lambda create-function --function-name visjs-neptune-lambda-func --role "arn:aws:iam::<aws-account-number>:role/service-role/lambda-vpc-access-role" --runtime nodejs8.10 --handler indexLambda.handler --description "Lambda function to make gremlin calls to Amazon Neptune" --timeout 120 --memory-size 256 --publish --vpc-config SubnetIds=<subnet-ids>,SecurityGroupIds=<sec-group-id> --zip-file fileb://lambdapackage.zip
+aws lambda create-function --function-name <lambda-function-name> --role "arn:aws:iam::<aws-account-number>:role/service-role/lambda-vpc-access-role" --runtime nodejs8.10 --handler indexLambda.handler --description "Lambda function to make gremlin calls to Amazon Neptune" --timeout 120 --memory-size 256 --publish --vpc-config SubnetIds=<subnet-ids>,SecurityGroupIds=<sec-group-id> --zip-file fileb://lambdapackage.zip
 ```
 
 We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
@@ -126,14 +126,41 @@ First we create the Restful API using the below command from AWS CLI.
 aws apigateway create-rest-api --name lambda-neptune-proxy-api --description "API Proxy for AWS Lambda function in VPC accessing Amazon Neptune" 
 ```
 
-Note the value of "id" field from the earlier output and use it as a <rest-api-id> value below.
+Note the value of "id" field from the earlier output and use it as a `<rest-api-id>1 value below.
 
 ```
 aws apigateway get-resources --rest-api-id <rest-api-id>
 ```
 
-Note the value of "id" field from the earlier output and use it as a <parent-id> value below.
+Note the value of "id" field from the earlier output and use it as a `<parent-id>` value below.
+Below command would create a resource under the root strutrure of the API.
 ```
 aws apigateway create-resource --rest-api-id <rest-api-id>  --parent-id <parent-id> --path-part {proxy+}
 ```
-  
+
+Note the value of "id" field from the output and use it as a `<resource-id>` in the command below.
+```
+aws apigateway put-method --rest-api-id <rest-api-id>  --resource-id <resource-id> --http-method ANY --authorization-type NONE
+```
+
+So far we created, an API, API Resource and Methods for that Resource (GET/PUT/POST/DELETE or ANY for all methods).
+We will now create the API method integration, that would identify the AWS Lambda function for which this resource will be acting as a PROXY.
+
+Use appropriate values obtained from the previous commands.
+```
+aws apigateway put-integration --rest-api-id <rest-api-id> --resource-id  <resource-id> --http-method ANY --type AWS_PROXY --integration-http-method POST  --uri arn:aws:apigateway:<aws-region-code>:lambda:path/2015-03-31/functions/arn:aws:lambda:<aws-region-code>:<aws-account-number>:function:<lambda-function-name>/invocations 
+```
+
+Finally we deploy the API using below command.
+```
+aws apigateway create-deployment --rest-api-id <rest-api-id> --stage-name test
+```
+
+In order for Amazon API Gateway API, to invoke AWS Lambda function we either need to provide the "execution-role" to API Integration or we can also add the permission (subscription) in AWS Lambda explicitly that says an API "X" can invoke a lambda function. This API Gateway subscription is also reflected in AWS Console.
+
+Execute below command to add API Gateway subscription/permission to AWS Lambda function.
+```
+aws lambda add-permission --function-name <lamnda-function-name> --statement-id <any-unique-id> --action lambda:* --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:<aws-region-code>:<aws-account-number>:<rest-api-id>/*/*/*
+```
+
+We have now created an API Gateway proxy for the AWS Lambda function.
