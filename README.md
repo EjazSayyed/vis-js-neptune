@@ -191,7 +191,7 @@ aws s3api create-bucket --bucket <bucket-name> --acl public-read --region <aws-r
 --configure website hosting on S3 bucket
 aws s3api put-bucket-website --bucket <bucket-name> --website-configuration '{
     "IndexDocument": {
-        "Suffix": "index.html"
+        "Suffix": "visualize-graph.html"
     },
     "ErrorDocument": {
         "Key": "error.html"
@@ -199,7 +199,7 @@ aws s3api put-bucket-website --bucket <bucket-name> --website-configuration '{
 }'
 
 --upload the html document with public read access
-aws s3 cp index.html error.html s3://mb-ej12/ --acl public-read
+aws s3 cp visualize-graph.html error.html s3://mb-ej12/ --acl public-read
 ```
 
 And, you are all set!
