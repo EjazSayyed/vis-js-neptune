@@ -45,7 +45,7 @@ Once the proxy is exposed, we can access the APIs from Javascript code being exe
 2. [Load sample data into Amazon Neptune](#2-load-sample-data-into-amazon-neptune)
 3. [Create and Configure AWS Lambda Function](#3-create-and-configure-aws-lambda-function)
 4. [Create and Configure Amazon API Gateway - Proxy API](#4-create-and-configure-amazon-api-gateway---proxy-api)
-5. Configure Amazon S3 bucket for hosting a static website
+5. [Configure Amazon S3 bucket for hosting a static website](#5-configure-amazon-s3-bucket-for-hosting-a-static-website)
 
 
 
@@ -177,3 +177,10 @@ aws lambda add-permission --function-name <lamnda-function-name> \
 ```
 
 We have now created an API Gateway proxy for the AWS Lambda function.
+
+### 5. Configure Amazon S3 bucket for hosting a static website
+
+Now that we have all the backend infrastructure ready for handling the API requests to get data out from Amazon Neptune, let's create an Amazon S3 bucket that will be used to host a static website.<br/>
+
+Run below commands to create an Amazon S3 bucket as a static website and upload the `visualize-graph.html` into it.
+
