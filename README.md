@@ -206,7 +206,7 @@ And, you are all set!
 
 Visualize the graph data through this application from below URL.
 
-http://\<bucket-name\>.s3-website.<aws-region-code>.amazonaws.com
+http://\<bucket-name\>.s3-website.\<aws-region-code\>.amazonaws.com
 
 ## Summary
 
