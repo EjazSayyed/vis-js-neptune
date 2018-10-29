@@ -184,3 +184,27 @@ Now that we have all the backend infrastructure ready for handling the API reque
 
 Run below commands to create an Amazon S3 bucket as a static website and upload the `visualize-graph.html` into it.
 
+```
+--create Amazon S3 bucket with public read access
+aws s3api create-bucket --bucket <bucket-name> --acl public-read --region <aws-region-code> --create-bucket-configuration LocationConstraint=<aws-region-code>
+
+--configure website hosting on S3 bucket
+aws s3api put-bucket-website --bucket <bucket-name> --website-configuration '{
+    "IndexDocument": {
+        "Suffix": "index.html"
+    },
+    "ErrorDocument": {
+        "Key": "error.html"
+    }
+}'
+
+--upload the html document with public read access
+aws s3 cp index.html error.html s3://mb-ej12/ --acl public-read
+```
+
+And, you are all set!
+
+Visualize the graph data through this application from below URL.
+
+http://<bucket-name>.s3-website.<aws-region-code>.amazonaws.com
+
