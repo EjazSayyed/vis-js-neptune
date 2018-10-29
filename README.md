@@ -146,7 +146,8 @@ aws apigateway create-resource --rest-api-id <rest-api-id>  --parent-id <parent
 
 Note the value of "id" field from the output and use it as a `<resource-id>` in the command below.
 ```
-aws apigateway put-method --rest-api-id <rest-api-id>  --resource-id <resource-id> --http-method ANY --authorization-type NONE
+aws apigateway put-method --rest-api-id <rest-api-id>  --resource-id <resource-id> --http-method ANY \
+--authorization-type NONE
 ```
 
 So far we created, an API, API Resource and Methods for that Resource (GET/PUT/POST/DELETE or ANY for all methods).
@@ -154,7 +155,10 @@ We will now create the API method integration, that would identify the AWS Lambd
 
 Use appropriate values obtained from the previous commands.
 ```
-aws apigateway put-integration --rest-api-id <rest-api-id> --resource-id  <resource-id> --http-method ANY --type AWS_PROXY --integration-http-method POST  --uri arn:aws:apigateway:<aws-region-code>:lambda:path/2015-03-31/functions/arn:aws:lambda:<aws-region-code>:<aws-account-number>:function:<lambda-function-name>/invocations 
+aws apigateway put-integration --rest-api-id <rest-api-id> \
+--resource-id  <resource-id> --http-method ANY --type AWS_PROXY \
+--integration-http-method POST  \
+--uri arn:aws:apigateway:<aws-region-code>:lambda:path/2015-03-31/functions/arn:aws:lambda:<aws-region-code>:<aws-account-number>:function:<lambda-function-name>/invocations 
 ```
 
 Finally we deploy the API using below command.
@@ -166,7 +170,10 @@ In order for Amazon API Gateway API, to invoke AWS Lambda function we either nee
 
 Execute below command to add API Gateway subscription/permission to AWS Lambda function.
 ```
-aws lambda add-permission --function-name <lamnda-function-name> --statement-id <any-unique-id> --action lambda:* --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:<aws-region-code>:<aws-account-number>:<rest-api-id>/*/*/*
+aws lambda add-permission --function-name <lamnda-function-name> \
+--statement-id <any-unique-id> --action lambda:* \
+--principal apigateway.amazonaws.com \
+--source-arn arn:aws:execute-api:<aws-region-code>:<aws-account-number>:<rest-api-id>/*/*/*
 ```
 
 We have now created an API Gateway proxy for the AWS Lambda function.
