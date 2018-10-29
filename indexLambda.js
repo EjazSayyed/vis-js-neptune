@@ -8,7 +8,7 @@ exports.handler = function(event, context, callback) {
 
     var DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
     var Graph = gremlin.structure.Graph;
-    dc = new DriverRemoteConnection('ws://nep1.crhihlsciw0e.us-east-2.neptune.amazonaws.com:8182/gremlin');
+    dc = new DriverRemoteConnection('ws://'+process.env.NEPTUNE_CLUSTER_ENDPOINT+':'+process.env.NEPTUNE_PORT+'/gremlin');
     var graph = new Graph();
     var g = graph.traversal().withRemote(dc);
 
