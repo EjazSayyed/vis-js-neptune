@@ -199,7 +199,7 @@ aws s3api put-bucket-website --bucket <bucket-name> --website-configuration '{
 }'
 
 --upload the html document with public read access
-aws s3 cp ./  s3://mb-ej12 --recursive --exclude "*" --include "*.html" --acl public-read
+aws s3 cp ./  s3://<bucket-name> --recursive --exclude "*" --include "*.html" --acl public-read
 ```
 
 And, you are all set!
