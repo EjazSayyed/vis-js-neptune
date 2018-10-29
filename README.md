@@ -111,7 +111,13 @@ aws iam attach-role-policy --role-name lambda-vpc-access-role --policy-arn arn:a
 We will now create the AWS Lambda function using the deployment package and IAM role created in previous steps.
 
 ```
-aws lambda create-function --function-name <lambda-function-name> --role "arn:aws:iam::<aws-account-number>:role/service-role/lambda-vpc-access-role" --runtime nodejs8.10 --handler indexLambda.handler --description "Lambda function to make gremlin calls to Amazon Neptune" --timeout 120 --memory-size 256 --publish --vpc-config SubnetIds=<subnet-ids>,SecurityGroupIds=<sec-group-id> --zip-file fileb://lambdapackage.zip
+aws lambda create-function --function-name <lambda-function-name> \
+--role "arn:aws:iam::<aws-account-number>:role/service-role/lambda-vpc-access-role" \
+--runtime nodejs8.10 --handler indexLambda.handler \
+--description "Lambda function to make gremlin calls to Amazon Neptune" \
+--timeout 120 --memory-size 256 --publish \
+--vpc-config SubnetIds=<subnet-ids>,SecurityGroupIds=<sec-group-id> \
+--zip-file fileb://lambdapackage.zip
 ```
 
 We recommend you to go through the AWS Lambda function source code at this point to understand how to query data using `Gremlin` APIs and how to parse and reformat the data to send it over to the clients.
