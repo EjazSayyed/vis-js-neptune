@@ -209,7 +209,7 @@ NOTE: While executing the below commands make sure to use escape character "\" i
 
 For Linux:
 ```
-sed -i -e 's/API_GATEWAY_ENDPOINT/\<API-Gateway-Endpoint\>/g' visualize-graph.html 
+sed -i -e 's/API_GATEWAY_ENDPOINT/<API-Gateway-Endpoint>/g' visualize-graph.html 
 
 e.g.
 sed -i -e 's/API_GATEWAY_ENDPOINT/https:\/\/7brms4lx43.execute-api.us-east-2.amazonaws.com\/test/g' visualize-graph.html
@@ -217,7 +217,7 @@ sed -i -e 's/API_GATEWAY_ENDPOINT/https:\/\/7brms4lx43.execute-api.us-east-2.ama
 
 For MacOS:
 ```
-find . -type f -name visualize-graph.html | xargs sed -i '' 's/API_GATEWAY_ENDPOINT/\<API-Gateway-Endpoint\>/g'
+find . -type f -name visualize-graph.html | xargs sed -i '' 's/API_GATEWAY_ENDPOINT/<API-Gateway-Endpoint>/g'
 
 e.g.
 find . -type f -name visualize-graph.html | xargs sed -i '' 's/API_GATEWAY_ENDPOINT/https:\/\/7brms4lx43.execute-api.us-east-2.amazonaws.com\/test/g'
@@ -238,6 +238,6 @@ http://\<bucket-name\>.s3-website.\<aws-region-code\>.amazonaws.com
 
 ## Summary
 
-In this GitHUb lab, you learned how to visualize data from Amazon Neptune using VIS.js library, Amazon API Gateway and AWS Lambda service.
+In this GitHub lab, you learned how to visualize data from Amazon Neptune using VIS.js library, Amazon API Gateway and AWS Lambda service.
 Feel free to send us your feedback and suggestions. We would be happy to incorporate those in our lab.
 
