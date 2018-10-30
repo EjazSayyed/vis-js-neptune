@@ -33,7 +33,7 @@
     <link href="https://s3.ap-south-1.amazonaws.com/149km/vis-network.min.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript">
-        var PROXY_API_URL = "API_GATEWAY_ENDPOINT";
+        var PROXY_API_URL = "https://7brms4lx43.execute-api.us-east-2.amazonaws.com/test";
         // var nodes = null;
         var edges = null;
         var network = null;
