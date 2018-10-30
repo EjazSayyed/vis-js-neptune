@@ -205,7 +205,7 @@ The visualize-graph.html file that we have as a part of this GitHub repository h
 
 Execute below commands to replace value of `API_GATEWAY_ENDPOINT` placeholder by real API Gateway Endpoint.
 
-NOTE: While executing the below commands make sure to use escape character "\" in URLs.
+NOTE: While executing the below commands make sure to use escape character "\\" in URLs.
 
 For Linux:
 ```
