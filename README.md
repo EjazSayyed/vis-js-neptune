@@ -197,7 +197,35 @@ aws s3api put-bucket-website --bucket <bucket-name> --website-configuration '{
         "Key": "error.html"
     }
 }'
+```
 
+### 6. Upload HTML file to Amazon S3
+
+The visualize-graph.html file that we have as a part of this GitHub repository has to be updated to reflect the API Gateway Endpoint that we created in the steps above.
+
+Execute below commands to replace value of `API_GATEWAY_ENDPOINT` placeholder by real API Gateway Endpoint.
+
+NOTE: While executing the below commands make sure to use escape character "\" in URLs.
+
+For Linux:
+```
+sed -i -e 's/API_GATEWAY_ENDPOINT/\<API-Gateway-Endpoint\>/g' visualize-graph.html 
+
+e.g.
+sed -i -e 's/API_GATEWAY_ENDPOINT/https:\/\/7brms4lx43.execute-api.us-east-2.amazonaws.com\/test/g' visualize-graph.html
+```
+
+For MacOS:
+```
+find . -type f -name visualize-graph.html | xargs sed -i '' 's/API_GATEWAY_ENDPOINT/\<API-Gateway-Endpoint\>/g'
+
+e.g.
+find . -type f -name visualize-graph.html | xargs sed -i '' 's/API_GATEWAY_ENDPOINT/https:\/\/7brms4lx43.execute-api.us-east-2.amazonaws.com\/test/g'
+```
+
+Once you have replace the value of placeholder `API_GATEWAY_ENDPOINT` in visualize-graph.html file, upload the file to S3 using below command.
+
+```
 --upload the html document with public read access
 aws s3 cp ./  s3://<bucket-name> --recursive --exclude "*" --include "*.html" --acl public-read
 ```
