@@ -236,6 +236,8 @@ Visualize the graph data through this application from below URL.
 
 http://\<bucket-name\>.s3-website.\<aws-region-code\>.amazonaws.com
 
+![](images/visualization.png)
+
 ## Summary
 
 In this GitHub lab, you learned how to visualize data from Amazon Neptune using VIS.js library, Amazon API Gateway and AWS Lambda service.
