@@ -24,7 +24,7 @@ VIS.js is a Javascript library used for visualizing graph data. It has various c
 ## PREREQUISITES:
 
 1. Amazon Neptune Cluster
-2. Access to AWS IAM for 
+2. Access to AWS IAM for <br>
 * creating AWS Lambda functions
 * creating IAM roles for Amazon Neptune cluster to access S3 and, for API Gateway to access AWS Lambda functions
 * APIs in Amazon API Gateway
