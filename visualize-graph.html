@@ -1,5 +1,19 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)http://visjs.org/examples/network/03_images.html -->
+<!--
+ * Copyright 2018. Amazon Web Services, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Amazon Neptune | Graph Visualization Demo</title>
 
@@ -57,33 +71,7 @@
 
         $(document).ready(function(){
 
-            $( "#Go" ).click(function(event){
-                var username = $("#users").val();
-                var lastchar= username.substring(username.length-1, username.length);
-                var nextletter= String.fromCharCode(lastchar.charCodeAt(0)+1);
-                var touser = username.substring(0,username.length-1)
-                touser = touser+nextletter;
-
-                $.get(PROXY_API_URL + "/search?username="+username+"&touser="+touser, function(data) {
-                    var resp = JSON.parse(JSON.stringify(data));
-                    console.log(resp);
-                    var x=0;
-                    var y=0;
-                    for(let i=0;i< resp.length;i++) {
-                        try {
-                            nodes.add({id:resp[i].id, label:resp[i].name[0], value:resp[i].label, color: 'red', font: {color:'white'}});
-                        }
-                        catch (e) { //if node is already added just continue
-                            //throw e;
-                            nodes.remove({id:resp[i].id });
-                            nodes.add({id:resp[i].id, label:resp[i].name[0], value:resp[i].label, color: 'red', font: {color:'white'}});
-                        }
-                    }
-                });
-
-            });
-
-            console.log('initializing the page..and loading the values in the search field');
+            console.log('Initializing the page..and loading the values in the Search LoV');
             $.get(PROXY_API_URL + "/initialize", function(data) {
                     console.log(data);
                     var js=JSON.parse(JSON.stringify(data))
@@ -113,18 +101,47 @@
                 }
             );
 
+            <!-- called when user clicks on the Search button -->
+            $( "#Go" ).click(function(event){
+                var username = $("#users").val();
+                var lastchar= username.substring(username.length-1, username.length);
+                var nextletter= String.fromCharCode(lastchar.charCodeAt(0)+1);
+                var touser = username.substring(0,username.length-1)
+                touser = touser+nextletter;
+
+                $.get(PROXY_API_URL + "/search?username="+username+"&touser="+touser, function(data) {
+                    var resp = JSON.parse(JSON.stringify(data));
+                    console.log(resp);
+                    var x=0;
+                    var y=0;
+                    for(let i=0;i< resp.length;i++) {
+                        try {
+                            nodes.add({id:resp[i].id, label:resp[i].name[0], value:resp[i].label, color: 'red', font: {color:'white'}});
+                        }
+                        catch (e) { //if node is already added just continue
+                            //throw e;
+                            nodes.remove({id:resp[i].id });
+                            nodes.add({id:resp[i].id, label:resp[i].name[0], value:resp[i].label, color: 'red', font: {color:'white'}});
+                        }
+                    }
+                });
+
+            });
+
+            <!-- call to render the VIS.js canvas -->
             draw();
+
         });
 
         // Called when the Visualization API is loaded.
         function draw() {
             resp = "";
-            console.log('Inside draw function..............');
+            console.log('Inside draw function to render graph elements (nodes/edges)...');
 
             // Create a data table with nodes.
-            nodes = []; //this will be converted to object below
+            nodes = []; //this will be converted to an object below
             // Create a data table with links.
-            edges = []; //this will be converted to object below
+            edges = []; //this will be converted to an object below
 
             nodes = new vis.DataSet();
             //handle events on "nodes" object that is added to network
@@ -245,6 +262,7 @@
 
         function callneptunegetneighbours(fromnode, nodes, edges)
         {
+            <!-- below code is without using jQuery -->
             var xhr = new XMLHttpRequest();
             var  resparr;
             const Http = new XMLHttpRequest();

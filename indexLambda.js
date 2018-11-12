@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018. Amazon Web Services, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
 var gremlin = require('gremlin');
 var http = require('http');
 var url = require('url');
@@ -31,7 +47,7 @@ exports.handler = function(event, context, callback) {
 
         g.V().hasLabel('User').limit(1000).valueMap(true).toList().then(
             data => {
-            console.log("Response from Neptune for initialize .."+JSON.stringify(data));
+            console.log("Response from Neptune for initialize .." + JSON.stringify(data));
         var nodes=[];
         for(var i = 0;    i < data.length;    i++)
         {
@@ -42,7 +58,7 @@ exports.handler = function(event, context, callback) {
             headers: headers,
             body: JSON.stringify(nodes)
         };
-        console.log("initialize response: " + JSON.stringify(data));
+        console.log("Initialize call response: " + JSON.stringify(data));
         callback(null, response);
         context.done();
         dc.close(); // look at this carefully!!!
@@ -63,7 +79,7 @@ exports.handler = function(event, context, callback) {
             headers: headers,
             body: JSON.stringify(data)
         };
-        console.log("search response: " + JSON.stringify(data));
+        console.log("Search call response: " + JSON.stringify(data));
         callback(null, response);
         context.done();
         dc.close(); // look at this carefully!!!
@@ -84,7 +100,7 @@ exports.handler = function(event, context, callback) {
             headers: headers,
             body: JSON.stringify(data)
         };
-        console.log("neighbours response: " + JSON.stringify(data));
+        console.log("getNeighbours response: " + JSON.stringify(data));
         callback(null, response);
         context.done();
         dc.close();
@@ -100,7 +116,7 @@ exports.handler = function(event, context, callback) {
     if (event.pathParameters.proxy.match(/getusertweets/ig)) {
         g.V().has('User', '~id', event.queryStringParameters.userid).out('Tweets').limit(3).valueMap(true).toList().then(
             data => {
-        console.log("getusertweets data"+JSON.stringify(data));
+        console.log("getusertweets data" + JSON.stringify(data));
         var response = {
             statusCode: 200,
             headers: headers,
@@ -141,28 +157,3 @@ exports.handler = function(event, context, callback) {
 
 }
 
-
-var myNodes = function(g, callback1)
-{
-
-    var nodes=[];
-
-    console.log('test!!');
-
-    g.V().has('User', 'name', 'Ramon Rippin').valueMap(true).limit(10).toList().then(
-        data => {
-        for(let i = 0;    i < data.length;    i++)
-        {
-            console.log('3!!');
-            nodes.push({id: data[i].id, label: data[i].name.toString(), group: 'switch', value: 10});
-        }
-    console.log('2!!');
-    callback1(null,nodes);
-    //dc.close();
-    }).
-    catch(error => {
-        console.log('ERROR', error);
-    dc.close();
-    });
-
-}
